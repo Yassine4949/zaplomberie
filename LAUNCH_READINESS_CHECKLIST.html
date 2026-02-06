@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Launch Readiness Checklist - ZA Plomberie</title>
+    <style>
+        @media print {
+            @page {
+                margin: 2cm;
+                size: A4;
+            }
+            body {
+                font-size: 10pt;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+        }
+        h1 {
+            color: #0ea5e9;
+            border-bottom: 3px solid #0ea5e9;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        h2 {
+            color: #0369a1;
+            margin-top: 25px;
+            border-left: 4px solid #0ea5e9;
+            padding-left: 10px;
+        }
+        h3 {
+            color: #075985;
+            margin-top: 20px;
+        }
+        .summary {
+            background: #f8fafc;
+            border: 2px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .status-not-ready {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .critical {
+            background: #fee2e2;
+            border-left: 4px solid #dc2626;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .high {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .medium {
+            background: #fef9c3;
+            border-left: 4px solid #eab308;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .nice {
+            background: #dcfce7;
+            border-left: 4px solid #16a34a;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .task-id {
+            font-weight: bold;
+            color: #0369a1;
+            font-size: 1.1em;
+        }
+        .why {
+            font-style: italic;
+            color: #64748b;
+        }
+        .where {
+            background: #f1f5f9;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        ul {
+            margin: 10px 0;
+        }
+        li {
+            margin: 5px 0;
+        }
+        code {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .go-live {
+            background: #e0f2fe;
+            border: 2px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .assumptions {
+            background: #f8fafc;
+            border-left: 4px solid #64748b;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #cbd5e1;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: #0ea5e9;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 Launch Readiness Checklist — ZA Plomberie</h1>
+    
+    <div class="summary">
+        <p><strong>Date:</strong> January 2025</p>
+        <p><strong>Project:</strong> ZA Plomberie Website (Next.js App Router)</p>
+        <div class="status-not-ready">Status: ❌ NOT READY FOR LAUNCH</div>
+        
+        <h3>Top 5 Blockers:</h3>
+        <ol>
+            <li>Default Next.js metadata in layout (SEO critical)</li>
+            <li>Booking form doesn't use database API (data loss risk)</li>
+            <li>Missing robots.txt and sitemap.xml (SEO)</li>
+            <li>No schema.org structured data (local SEO)</li>
+            <li>HTML lang="en" should be "fr" (accessibility/SEO)</li>
+        </ol>
+    </div>
+
+    <h1>🔴 CRITICAL (Must Fix Before Launch)</h1>
+
+    <div class="critical">
+        <div class="task-id">C-01: Update Metadata and SEO Basics</div>
+        <p><strong>Issue:</strong> Default Next.js metadata in <code>app/layout.tsx</code>; missing OpenGraph/Twitter cards; HTML lang="en" should be "fr"</p>
+        <p class="why"><strong>Why it matters:</strong> SEO, social sharing, accessibility</p>
+        <p><strong>Where to fix:</strong> <span class="where">app/layout.tsx</span></p>
+        <p><strong>Implementation steps:</strong></p>
+        <ol>
+            <li>Replace metadata export with proper French business metadata</li>
+            <li>Add OpenGraph and Twitter card metadata</li>
+            <li>Change <code>&lt;html lang="en"&gt;</code> to <code>&lt;html lang="fr"&gt;</code></li>
+            <li>Add canonical URL</li>
+            <li>Add robots meta</li>
+        </ol>
+        <p><strong>Acceptance criteria:</strong> Metadata visible in page source, correct lang attribute, OpenGraph preview works in social media</p>
+    </div>
+
+    <div class="critical">
+        <div class="task-id">C-02: Fix Booking Form to Use Database API</div>
+        <p><strong>Issue:</strong> <code>BookingSection.tsx</code> only calls <code>/api/email</code>, not <code>/api/bookings</code>; bookings not saved to database</p>
+        <p class="why"><strong>Why it matters:</strong> Data loss, no booking history, can't track submissions</p>
+        <p><strong>Where to fix:</strong> <span class="where">app/components/BookingSection.tsx</span> (line 66)</p>
+        <p><strong>Implementation steps:</strong></p>
+        <ol>
+            <li>Update <code>handleSubmit</code> to call <code>/api/bookings</code> first</li>
+            <li>Then call <code>/api/email</code> for notification</li>
+            <li>Handle errors appropriately</li>
+            <li>Ensure booking ID is returned</li>
+        </ol>
+        <p><strong>Acceptance criteria:</strong> Submissions appear in database, email still sent, error handling works</p>
+    </div>
+
+    <div class="critical">
+        <div class="task-id">C-03: Add Rate Limiting to Email and WhatsApp Routes</div>
+        <p><strong>Issue:</strong> <code>/api/email</code> and <code>/api/whatsapp</code> routes don't use rate limiting; vulnerable to abuse</p>
+        <p class="why"><strong>Why it matters:</strong> Security, cost control, service reliability</p>
+        <p><strong>Where to fix:</strong> <span class="where">app/api/email/route.ts</span>, <span class="where">app/api/whatsapp/route.ts</span></p>
+        <p><strong>Implementation steps:</strong></p>
+        <ol>
+            <li>Import <code>rateLimitOrThrow</code> from <code>@/lib/api/ratelimit</code></li>
+            <li>Add rate limit check at start of POST handlers</li>
+            <li>Return 429 error if exceeded</li>
+        </ol>
+        <p><strong>Acceptance criteria:</strong> Rate limit errors return 429, abuse prevented</p>
+    </div>
+
+    <div class="critical">
+        <div class="task-id">C-04: Create robots.txt and sitemap.xml</div>
+        <p><strong>Issue:</strong> Missing robots.txt and sitemap.xml files</p>
+        <p class="why"><strong>Why it matters:</strong> SEO, search engine crawlability</p>
+        <p><strong>Where to fix:</strong> Create <span class="where">app/robots.ts</span> and <span class="where">app/sitemap.ts</span> (Next.js App Router)</p>
+        <p><strong>Implementation steps:</strong></p>
+        <ol>
+            <li>Create <code>app/robots.ts</code> with proper rules</li>
+            <li>Create <code>app/sitemap.ts</code> with all sections</li>
+            <li>Update domain placeholder</li>
+        </ol>
+        <p><strong>Acceptance criteria:</strong> <code>/robots.txt</code> accessible, <code>/sitemap.xml</code> accessible, correct content</p>
+    </div>
+
+    <div class="critical">
+        <div class="task-id">C-05: Add Schema.org Structured Data (LocalBusiness)</div>
+        <p><strong>Issue:</strong> Missing structured data for local SEO</p>
+        <p class="why"><strong>Why it matters:</strong> Local search visibility, rich snippets</p>
+        <p><strong>Where to fix:</strong> <span class="where">app/layout.tsx</span> or <span class="where">app/page.tsx</span></p>
+        <p><strong>Implementation steps:</strong></p>
+        <ol>
+            <li>Add JSON-LD script with LocalBusiness schema</li>
+            <li>Include address, phone, services, area served</li>
+            <li>Add Service and OfferCatalog schemas</li>
+        </ol>
+        <p><strong>Acceptance criteria:</strong> Validates in Google Rich Results Test, appears in search results</p>
+    </div>
+
+    <div class="critical">
+        <div class="task-id">C-06: Fix Email Address Inconsistency</div>
+        <p><strong>Issue:</strong> Header uses <code>zaplomberie.pro@gmail.com</code>, form mentions <code>zaplomberie@orange.fr</code></p>
+        <p class="why"><strong>Why it matters:</strong> Trust, consistency, correct contact</p>
+        <p><strong>Where to fix:</strong> <span class="where">app/components/BookingSection.tsx</span> (line 269), verify <span class="where">app/components/Header.tsx</span> (line 6)</p>
+        <p><strong>Implementation steps:</strong></p>
+        <ol>
+            <li>Standardize on one email (recommend <code>zaplomberie.pro@gmail.com</code>)</li>
+            <li>Update form privacy text to match</li>
+            <li>Update footer if different</li>
+        </ol>
+        <p><strong>Acceptance criteria:</strong> Same email everywhere</p>
+    </div>
+
+    <div class="critical">
+        <div class="task-id">C-07: Add Security Headers</div>
+        <p><strong>Issue:</strong> No security headers configured</p>
+        <p class="why"><strong>Why it matters:</strong> Security, XSS/clickjacking protection</p>
+        <p><strong>Where to fix:</strong> <span class="where">next.config.ts</span></p>
+        <p><strong>Implementation steps:</strong></p>
+        <ol>
+            <li>Add <code>headers()</code> function to next.config.ts</li>
+            <li>Include HSTS, X-Frame-Options, CSP, etc.</li>
+        </ol>
+        <p><strong>Acceptance criteria:</strong> Headers present in response, no security warnings</p>
+    </div>
+
+    <div class="critical">
+        <div class="task-id">C-08: Create Error Pages (404, 500)</div>
+        <p><strong>Issue:</strong> Missing custom error pages</p>
+        <p class="why"><strong>Why it matters:</strong> UX, branding, recovery guidance</p>
+        <p><strong>Where to fix:</strong> Create <span class="where">app/not-found.tsx</span>, <span class="where">app/error.tsx</span>, <span class="where">app/global-error.tsx</span></p>
+        <p><strong>Implementation steps:</strong></p>
+        <ol>
+            <li>Create 404 page matching theme</li>
+            <li>Create error boundary component</li>
+            <li>Add navigation back to home</li>
+        </ol>
+        <p><strong>Acceptance criteria:</strong> 404 page renders correctly, error page renders correctly, matches theme</p>
+    </div>
+
+    <h1>🟠 HIGH PRIORITY</h1>
+
+    <div class="high">
+        <div class="task-id">H-01: Add Favicon and Web Manifest</div>
+        <p><strong>Issue:</strong> Only basic favicon.ico, no manifest.json or icon set</p>
+        <p class="why"><strong>Why it matters:</strong> PWA, mobile, branding</p>
+        <p><strong>Where to fix:</strong> <span class="where">app/icon.tsx</span> (or <span class="where">public/favicon.ico</span>), <span class="where">app/manifest.ts</span></p>
+        <p><strong>Implementation steps:</strong></p>
+        <ol>
+            <li>Create <code>app/manifest.ts</code> with proper PWA config</li>
+            <li>Ensure favicon exists</li>
+            <li>Add theme colors</li>
+        </ol>
+        <p><strong>Acceptance criteria:</strong> Manifest accessible, favicon displays</p>
+    </div>
+
+    <div class="high">
+        <div class="task-id">H-02: Improve Rate Limiting (Production-Ready)</div>
+        <p><strong>Issue:</strong> In-memory rate limiting won't work across instances/restarts</p>
+        <p class="why"><strong>Why it matters:</strong> Reliability, scalability</p>
+        <p><strong>Where to fix:</strong> <span class="where">lib/api/ratelimit.ts</span></p>
+        <p><strong>Implementation steps:</strong></p>
+        <ol>
+            <li>Use Redis (Upstash/Vercel KV) or database-backed rate limiting</li>
+            <li>Or use Vercel Edge Config/Upstash for serverless</li>
+            <li>Fallback: Keep in-memory but document limitation</li>
+        </ol>
+        <p><strong>Acceptance criteria:</strong> Rate limiting persists across restarts, works in production</p>
+    </div>
+
+    <div class="high">
+        <div class="task-id">H-03: Add Input Validation and Sanitization</div>
+        <p><strong>Issue:</strong> Form inputs not sanitized; XSS risk</p>
+        <p class="why"><strong>Why it matters:</strong> Security</p>
+        <p><strong>Where to fix:</strong> <span class="where">app/components/BookingSection.tsx</span>, API routes</p>
+        <p><strong>Implementation steps:</strong></p>
+        <ol>
+            <li>Sanitize user input before email/database</li>
+            <li>Use DOMPurify or similar for HTML content</li>
+            <li>Validate phone format (French)</li>
+        </ol>
+        <p><strong>Acceptance criteria:</strong> XSS attempts blocked, validation errors handled</p>
+    </div>
+
+    <div class="high">
+        <div class="task-id">H-04: Add Privacy Policy Page</div>
+        <p><strong>Issue:</strong> Form mentions privacy policy but no dedicated page</p>
+        <p class="why"><strong>Why it matters:</strong> RGPD compliance, legal requirement</p>
+        <p><strong>Where to fix:</strong> Create <span class="where">app/politique-de-confidentialite/page.tsx</span></p>
+        <p><strong>Implementation steps:</strong></p>
+        <ol>
+            <li>Create page with full RGPD-compliant privacy policy</li>
+            <li>Include: data collection, usage, rights, contact, retention</li>
+            <li>Link from footer and booking form</li>
+        </ol>
+        <p><strong>Acceptance criteria:</strong> Page accessible, covers RGPD requirements</p>
+    </div>
+
+    <div class="high">
+        <div class="task-id">H-05: Add Cookie Consent Banner (If Analytics)</div>
+        <p><strong>Issue:</strong> No cookie consent; required if using analytics</p>
+        <p class="why"><strong>Why it matters:</strong> RGPD compliance</p>
+        <p><strong>Where to fix:</strong> New component + <span class="where">app/layout.tsx</span></p>
+        <p><strong>Implementation steps:</strong></p>
+        <ol>
+            <li>Implement cookie consent banner</li>
+            <li>Only load analytics after consent</li>
+            <li>Store consent preference</li>
+        </ol>
+        <p><strong>Acceptance criteria:</strong> Banner appears, consent stored, analytics respect consent</p>
+    </div>
+
+    <div class="high">
+        <div class="task-id">H-06: Improve Image Optimization</div>
+        <p><strong>Issue:</strong> No explicit image optimization config</p>
+        <p class="why"><strong>Why it matters:</strong> Performance, Core Web Vitals</p>
+        <p><strong>Where to fix:</strong> <span class="where">next.config.ts</span></p>
+        <p><strong>Implementation steps:</strong></p>
+        <ol>
+            <li>Add image optimization config</li>
+            <li>Ensure all <code>&lt;Image&gt;</code> use <code>sizes</code> prop</li>
+            <li>Add AVIF/WebP support</li>
+        </ol>
+        <p><strong>Acceptance criteria:</strong> Images optimized, Lighthouse score improved</p>
+    </div>
+
+    <div class="high">
+        <div class="task-id">H-07: Add Loading States and Error Boundaries</div>
+        <p><strong>Issue:</strong> Limited loading/error feedback</p>
+        <p class="why"><strong>Why it matters:</strong> UX, reliability</p>
+        <p><strong>Where to fix:</strong> Components with async operations</p>
+        <p><strong>Implementation steps:</strong></p>
+        <ol>
+            <li>Add loading skeletons for gallery/images</li>
+            <li>Improve error messages in booking form</li>
+            <li>Add retry mechanisms</li>
+        </ol>
+        <p><strong>Acceptance criteria:</strong> Clear loading states, clear error states, users can recover</p>
+    </div>
+
+    <div class="high">
+        <div class="task-id">H-08: Verify All Environment Variables</div>
+        <p><strong>Issue:</strong> Need to confirm all required env vars are documented and set</p>
+        <p class="why"><strong>Why it matters:</strong> Deployment reliability</p>
+        <p><strong>Where to fix:</strong> Create <span class="where">.env.example</span>, document in README</p>
+        <p><strong>Implementation steps:</strong></p>
+        <ol>
+            <li>Create <code>.env.example</code> with all required vars</li>
+            <li>Document in README</li>
+            <li>Verify production env vars set</li>
+        </ol>
+        <p><strong>Acceptance criteria:</strong> All vars documented, deployment succeeds</p>
+    </div>
+
+    <h1>🟡 MEDIUM PRIORITY</h1>
+
+    <p><em>See markdown file for full details of Medium and Nice-to-Have tasks...</em></p>
+
+    <div class="medium">
+        <div class="task-id">M-01: Add Analytics (Google Analytics 4)</div>
+        <div class="task-id">M-02: Improve Accessibility (ARIA, Keyboard Nav)</div>
+        <div class="task-id">M-03: Add Form Field Validation Feedback</div>
+        <div class="task-id">M-04: Optimize Font Loading</div>
+        <div class="task-id">M-05: Add Service Coverage Disclaimer</div>
+        <div class="task-id">M-06: Add Emergency Availability Disclaimer</div>
+        <div class="task-id">M-07: Add Pricing Disclaimer Clarity</div>
+        <div class="task-id">M-08: Improve Gallery Image Alt Text</div>
+        <div class="task-id">M-09: Add Breadcrumbs (SEO)</div>
+        <div class="task-id">M-10: Add Contact Form Honeypot/CSRF Protection</div>
+    </div>
+
+    <h1>🟢 NICE-TO-HAVE</h1>
+
+    <div class="nice">
+        <div class="task-id">N-01: Add Testimonials Schema (Review schema.org)</div>
+        <div class="task-id">N-02: Add FAQ Section with Schema</div>
+        <div class="task-id">N-03: Add Blog/Articles Section (If Content Exists)</div>
+        <div class="task-id">N-04: Add Social Media Links (If Applicable)</div>
+        <div class="task-id">N-05: Add Performance Monitoring</div>
+        <div class="task-id">N-06: Add Sitemap for Images</div>
+        <div class="task-id">N-07: Add Preconnect for External Resources</div>
+        <div class="task-id">N-08: Add Service Area Map Visualization</div>
+    </div>
+
+    <h1>🚀 GO-LIVE STEPS</h1>
+
+    <div class="go-live">
+        <h2>Pre-Deployment Checklist</h2>
+        <ol>
+            <li>✅ Complete all CRITICAL tasks (C-01 to C-08)</li>
+            <li>✅ Complete HIGH priority tasks (H-01 to H-08)</li>
+            <li>✅ Test locally: <code>npm run build && npm start</code></li>
+            <li>✅ Verify all environment variables set</li>
+            <li>✅ Test booking form end-to-end (database + email)</li>
+            <li>✅ Test on mobile devices (iOS Safari, Android Chrome)</li>
+            <li>✅ Run Lighthouse audit (target: 90+ all categories)</li>
+            <li>✅ Test all anchor links (#accueil, #apropos, etc.)</li>
+            <li>✅ Verify phone links (<code>tel:</code>) work on mobile</li>
+            <li>✅ Verify email links (<code>mailto:</code>) work</li>
+        </ol>
+
+        <h2>Domain & DNS Setup</h2>
+        <ol>
+            <li>Purchase/configure domain (e.g., zaplomberie.fr)</li>
+            <li>Set up DNS records</li>
+            <li>Configure domain in Vercel/hosting provider</li>
+            <li>Update <code>NEXT_PUBLIC_SITE_URL</code> env var</li>
+            <li>Update all hardcoded URLs in code</li>
+        </ol>
+
+        <h2>Environment Variables (Production)</h2>
+        <ul>
+            <li><code>DATABASE_URL</code></li>
+            <li><code>EMAIL_USER</code></li>
+            <li><code>EMAIL_PASSWORD</code></li>
+            <li><code>EMAIL_RECIPIENT</code></li>
+            <li><code>GOOGLE_MAPS_API_KEY</code></li>
+            <li><code>ADMIN_API_KEY</code></li>
+            <li><code>NEXT_PUBLIC_SITE_URL</code></li>
+            <li><code>WHATSAPP_TOKEN</code> (if used)</li>
+        </ul>
+
+        <h2>Build & Deploy</h2>
+        <ol>
+            <li>Push code to Git repository</li>
+            <li>Connect repository to Vercel/hosting</li>
+            <li>Configure build command: <code>npm run build</code></li>
+            <li>Deploy to production</li>
+            <li>Verify build succeeds</li>
+        </ol>
+
+        <h2>Post-Deployment Verification</h2>
+        <ol>
+            <li>Visit production URL</li>
+            <li>Test all sections load correctly</li>
+            <li>Submit test booking</li>
+            <li>Verify HTTPS enabled</li>
+            <li>Check security headers</li>
+            <li>Test 404 page</li>
+            <li>Verify robots.txt and sitemap.xml</li>
+            <li>Run Lighthouse on production</li>
+            <li>Submit sitemap to Google Search Console</li>
+        </ol>
+    </div>
+
+    <div class="assumptions">
+        <h2>📝 Assumptions Made</h2>
+        <ol>
+            <li>Domain will be <code>zaplomberie.fr</code> (update if different)</li>
+            <li>Hosting on Vercel (adjust if different)</li>
+            <li>Database is Neon/PostgreSQL</li>
+            <li>Email via Gmail</li>
+            <li>Business address: "10 Route de la Barre, 44470 Thouaré-sur-Loire"</li>
+            <li>Coordinates: Approximate (verify for schema.org)</li>
+            <li>SIRET not required for launch (verify French business requirements)</li>
+        </ol>
+    </div>
+
+    <h2>⏱️ Estimated Timeline</h2>
+    <ul>
+        <li><strong>Critical tasks:</strong> 2-3 days</li>
+        <li><strong>High priority:</strong> 1-2 days</li>
+        <li><strong>Medium priority:</strong> 2-3 days</li>
+        <li><strong>Nice-to-have:</strong> 1-2 days</li>
+        <li><strong>Testing & deployment:</strong> 1 day</li>
+    </ul>
+    <p><strong>Total:</strong> ~1 week for critical + high priority</p>
+
+    <hr>
+    <p style="text-align: center; color: #64748b; margin-top: 40px;">
+        <strong>Document Version:</strong> 1.0<br>
+        <strong>Last Updated:</strong> January 2025
+    </p>
+</body>
+</html>
