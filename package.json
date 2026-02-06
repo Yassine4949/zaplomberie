@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "set NEXT_DISABLE_TURBOPACK=1&& next dev",
     "dev:clean": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true}); console.log('✅ .next removed')\" && set NEXT_DISABLE_TURBOPACK=1&& next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
+    "postinstall": "prisma generate",
     "start": "next start",
     "lint": "eslint"
   },
