@@ -1,53 +1,98 @@
 // app/components/AvisSection.tsx
-import React from 'react';
+'use client';
 
-const reviews = [
-  {
-    name: 'Céline D.',
-    city: 'Thouaré-sur-Loire',
-    text: "Intervention rapide pour une fuite dans la salle de bain. Explications claires, travail propre, et le tarif annoncé a été respecté.",
-  },
-  {
-    name: 'Marc L.',
-    city: 'Sainte-Luce-sur-Loire',
-    text: "Panne de chaudière en plein week-end, il a pu se déplacer rapidement et remettre le chauffage. Très professionnel et rassurant.",
-  },
-  {
-    name: 'Julie R.',
-    city: 'Carquefou',
-    text: "Remplacement de WC et robinetterie. De bons conseils, ponctuel, et très soigneux sur la finition. Je recommande sans hésiter.",
-  },
-  {
-    name: 'Nicolas P.',
-    city: 'Thouaré-sur-Loire',
-    text: "Canalisation bouchée dans la cuisine, problème réglé rapidement. Le chantier a été laissé propre et les explications étaient claires.",
-  },
-  // Avis Bilik
-  {
-    name: 'Client Bilik',
-    city: 'Thouaré-sur-Loire',
-    text: 'Excellent service, intervention rapide et professionnelle. Je recommande vivement ZA Plomberie.',
-  },
-  {
-    name: 'Client Bilik',
-    city: 'Nantes',
-    text: "Très satisfait de l'intervention. Travail soigné et tarif transparent. Service au top !",
-  },
-  {
-    name: 'Client Bilik',
-    city: 'Carquefou',
-    text: 'Plombier sérieux et compétent. Intervention dans les délais annoncés. Je recommande.',
-  },
-  {
-    name: 'Client Bilik',
-    city: 'Sainte-Luce-sur-Loire',
-    text: 'Service de qualité, professionnel et réactif. Très bon rapport qualité-prix.',
-  },
+import React, { useEffect, useMemo, useState } from 'react';
+
+type Review = {
+  id?: string;
+  name: string;
+  city?: string;
+  rating: number;
+  message: string;
+  createdAt?: string;
+};
+
+const staticReviews: Review[] = [
+  
 ];
 
 export default function AvisSection(): React.ReactElement {
-  const googleMapsReviewUrl =
-    'https://www.google.com/maps/place/za+plomberie/@43.3251777,0.2901846,6z/data=!4m12!1m2!2m1!1sza+plomberie!3m8!1s0x12c9c1cb1f66b18d:0xca8e8f91782c7ad6!8m2!3d43.29885!4d5.3678622!9m1!1b1!15sCgx6YSBwbG9tYmVyaWVaDiIMemEgcGxvbWJlcmllkgEHcGx1bWJlcpoBRENpOURRVWxSUVVOdlpFTm9kSGxqUmpsdlQyMU9TV05zU2xkVmFtaE5UbXRTVGxReVpFdFNWRkpJV2pKV1NXTkhZeEFC4AEA-gEECAAQQg!16s%2Fg%2F11y1vfv65l?entry=ttu&g_ep=EgoyMDI2MDEwNy4wIKXMDSoASAFQAw%3D%3D';
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({
+    name: '',
+    city: '',
+    rating: 5,
+    message: '',
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+    fetch('/api/reviews')
+      .then((res) => res.json())
+      .then((json) => {
+        const data = json?.success?.data?.reviews;
+        if (isMounted && Array.isArray(data)) {
+          setReviews(data);
+        }
+      })
+      .catch(() => null)
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const displayedReviews = useMemo(() => {
+    return [...reviews, ...staticReviews];
+  }, [reviews]);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: name === 'rating' ? Number(value) : value,
+    }));
+  };
+
+  const submitReview = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitError(null);
+    setSubmitSuccess(false);
+
+    try {
+      const res = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+
+      const json = await res.json();
+      const created = json?.success?.data?.review as Review | undefined;
+
+      if (!res.ok || !created) {
+        const message =
+          json?.error?.message ||
+          'Impossible dâ€™enregistrer votre avis. RÃ©essayez plus tard.';
+        setSubmitError(message);
+        return;
+      }
+
+      setReviews((prev) => [created, ...prev]);
+      setForm({ name: '', city: '', rating: 5, message: '' });
+      setSubmitSuccess(true);
+    } catch {
+      setSubmitError('Erreur rÃ©seau. Merci de rÃ©essayer.');
+    }
+  };
 
   return (
     <section id="avis" className="border-t border-slate-800/60 bg-slate-950 py-20">
@@ -62,20 +107,17 @@ export default function AvisSection(): React.ReactElement {
           </h2>
 
           <p className="mt-2 text-sm text-slate-300 sm:text-base">
-            Des interventions réalisées autour de Thouaré-sur-Loire, avec un suivi sérieux et un contact humain.
-          </p>
-
-          
-          
+          Des interventions réalisées autour de Thouaré-sur-Loire, avec un suivi sérieux et un contact humain.          </p>
+        </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {reviews.map((review, index) => (
+          {(loading ? staticReviews : displayedReviews).map((review, index) => (
             <figure
               key={`${review.name}-${index}`}
               className="group h-full rounded-2xl border border-slate-800 bg-slate-900/70 p-5 shadow-[0_18px_45px_-32px_rgba(15,23,42,1)] transition hover:border-sky-500/70 hover:shadow-[0_20px_60px_-30px_rgba(56,189,248,0.4)]"
             >
               <blockquote className="text-sm leading-relaxed text-slate-200">
-                &ldquo;{review.text}&rdquo;
+                &ldquo;{review.message}&rdquo;
               </blockquote>
 
               <figcaption className="mt-4 flex items-center justify-between text-xs text-slate-400">
@@ -85,28 +127,115 @@ export default function AvisSection(): React.ReactElement {
                 </div>
 
                 <div className="flex items-center gap-0.5 text-amber-400">
-                  <span>★★★★★</span>
+                  <span>{'*'.repeat(review.rating || 5)}</span>
                 </div>
               </figcaption>
             </figure>
           ))}
-        </div>  
-        {/* ✅ Google Maps review button */}
-        <div className="mt-6 flex justify-center">
-            <a
-              href={googleMapsReviewUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-full bg-sky-500 px-6 py-3 text-sm font-semibold text-white shadow-[0_18px_45px_-18px_rgba(56,189,248,1)] transition hover:bg-sky-400"
-            >
-              Laisser un avis sur Google
-            </a>
-          </div>
-
-          <p className="mt-2 text-xs text-slate-500">
-            Vous serez redirigé vers Google Maps pour publier votre avis.
-          </p>
         </div>
+        <div className="mt-8 flex justify-center">
+          <button
+            type="button"
+            onClick={() => setShowForm((current) => !current)}
+            className="rounded-full bg-sky-500 px-6 py-3 text-sm font-semibold text-slate-950 shadow-[0_18px_45px_-18px_rgba(56,189,248,1)] transition hover:bg-sky-400"
+          >
+            {showForm ? 'Fermer le formulaire' : 'Laisser un avis sur le site'}
+          </button>
+        </div>
+
+        {showForm && (
+          <div className="mt-6 rounded-2xl border border-slate-800/80 bg-slate-900/70 p-6">
+            <h3 className="text-base font-semibold text-slate-100">
+              Laisser un avis sur le site
+            </h3>
+            <p className="mt-1 text-xs text-slate-400">
+              Votre avis apparaitra apres validation automatique.
+            </p>
+
+            <form className="mt-4 grid gap-4 sm:grid-cols-2" onSubmit={submitReview}>
+              <div className="space-y-2">
+                <label className="text-xs font-medium uppercase tracking-wide text-slate-300">
+                  Nom
+                </label>
+                <input
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  required
+                  minLength={2}
+                  className="w-full rounded-xl border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-50 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/40"
+                  placeholder="Votre nom"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-medium uppercase tracking-wide text-slate-300">
+                  Ville (optionnel)
+                </label>
+                <input
+                  name="city"
+                  value={form.city}
+                  onChange={handleChange}
+                  className="w-full rounded-xl border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-50 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/40"
+                  placeholder="Votre ville"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-medium uppercase tracking-wide text-slate-300">
+                  Note
+                </label>
+                <select
+                  name="rating"
+                  value={form.rating}
+                  onChange={handleChange}
+                  className="w-full rounded-xl border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-50 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/40"
+                >
+                  {[5, 4, 3, 2, 1].map((value) => (
+                    <option key={value} value={value}>
+                      {value} / 5
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-2 sm:col-span-2">
+                <label className="text-xs font-medium uppercase tracking-wide text-slate-300">
+                  Votre avis
+                </label>
+                <textarea
+                  name="message"
+                  value={form.message}
+                  onChange={handleChange}
+                  required
+                  minLength={10}
+                  rows={4}
+                  className="w-full rounded-xl border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-50 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/40"
+                  placeholder="Decrivez votre experience..."
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <button
+                  type="submit"
+                  className="w-full rounded-full bg-sky-500 px-6 py-3 text-sm font-semibold text-slate-950 shadow-[0_18px_45px_-18px_rgba(56,189,248,1)] transition hover:bg-sky-400"
+                >
+                  Envoyer mon avis
+                </button>
+              </div>
+
+              {submitSuccess && (
+                <p className="sm:col-span-2 text-xs text-emerald-400">
+                  Merci ! Votre avis a bien ete enregistre.
+                </p>
+              )}
+
+              {submitError && (
+                <p className="sm:col-span-2 text-xs text-rose-400">{submitError}</p>
+              )}
+            </form>
+          </div>
+        )}
       </div>
     </section>
   );

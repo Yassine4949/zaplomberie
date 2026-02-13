@@ -18,3 +18,12 @@ model Booking {
   status        String   @default("NEW")
   createdAt     DateTime @default(now())
 }
+
+model Review {
+  id        String   @id @default(cuid())
+  name      String
+  city      String?
+  rating    Int
+  message   String
+  createdAt DateTime @default(now())
+}
