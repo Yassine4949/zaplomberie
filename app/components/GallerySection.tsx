@@ -133,7 +133,7 @@ export default function GallerySection() {
   );
 
   return (
-    <section id="galerie" className="border-b border-slate-800/60 bg-slate-950 py-20">
+    <section className="border-b border-slate-800/60 bg-slate-950 py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10">
           <h2 className="text-2xl md:text-3xl font-bold text-slate-50">Galerie</h2>
