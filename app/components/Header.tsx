@@ -7,20 +7,30 @@ export default function Header(): React.ReactElement {
   const phoneDisplay = '06 75 61 20 80';
   const phoneRaw = '0675612080';
 
+  const handleHashNav =
+    (targetId: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault();
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', `#${targetId}`);
+      }
+    };
+
   const navLinks = [
     { label: 'Accueil', href: '#accueil' },
     { label: 'À propos', href: '#apropos' },
     { label: 'Services', href: '#services' },
     { label: 'Tarifs', href: '#tarifs' },
     { label: 'Avis', href: '#avis' },
-    { label: 'Galeries', href: '#galeries' },
+    { label: 'Galeries', href: '#galerie' },
   ];
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         {/* Left: Logo / Brand */}
-        <a href="#accueil" className="flex items-center gap-3">
+        <a href="#accueil" onClick={handleHashNav('accueil')} className="flex items-center gap-3">
           <div className="leading-tight">
             <p className="text-sm font-semibold text-slate-50">ZA Plomberie</p>
             <p className="text-xs text-slate-400">Plomberie & Chauffage</p>
@@ -33,6 +43,7 @@ export default function Header(): React.ReactElement {
             <a
               key={l.href}
               href={l.href}
+              onClick={handleHashNav(l.href.slice(1))}
               className="transition hover:text-sky-200"
             >
               {l.label}
@@ -69,6 +80,7 @@ export default function Header(): React.ReactElement {
           {/* ✅ Contact button (text WHITE) */}
           <a
             href="#reservation"
+            onClick={handleHashNav('reservation')}
             className="inline-flex items-center justify-center rounded-full bg-sky-500 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_18px_45px_-18px_rgba(56,189,248,1)] transition hover:bg-sky-400"
           >
             Prendre contact – demande de devis
