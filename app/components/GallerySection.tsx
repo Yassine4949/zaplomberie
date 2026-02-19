@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 
 type CategoryKey =
@@ -8,10 +8,10 @@ type CategoryKey =
   | 'cuisine'
   | 'wc-suspendus'
   | 'plancher-chauffant'
-  | 'Désembouage'
-  | 'Remplacement'
-  | 'Récréation'
-  | 'Réparation' 
+  | 'desembouage'
+  | 'remplacement'
+  | 'recreation'
+  | 'reparation'
   | 'chaudiere';
 
 type Category = {
@@ -20,10 +20,22 @@ type Category = {
   items: { src: string }[];
 };
 
+const CATEGORY_LABELS: Record<string, string> = {
+  'salle-de-bain': 'Renovation salle de bain',
+  cuisine: 'Amenagement cuisine',
+  'wc-suspendus': 'Installation de WC suspendus',
+  'plancher-chauffant': 'Installation de plancher chauffant',
+  desembouage: 'Desembouage reseau chauffage',
+  remplacement: 'Remplacement chaudiere',
+  recreation: 'Reamenagement reseau des eaux usees',
+  reparation: 'Reparation fuite',
+  chaudiere: 'Chaudiere',
+};
+
 const CATEGORIES: Category[] = [
   {
     key: 'salle-de-bain',
-    label: 'Rénovation d’une salle de bain ',
+    label: 'Renovation salle de bain',
     items: [
       { src: '/gallery/salle-de-bain/Salle de bain9.jpg' },
       { src: '/gallery/salle-de-bain/Salle de bain7.jpg' },
@@ -37,32 +49,32 @@ const CATEGORIES: Category[] = [
     ],
   },
   {
-    key: 'Désembouage',
-    label: 'Désembouage d’un réseau chauffage',
+    key: 'desembouage',
+    label: 'Desembouage reseau chauffage',
     items: [
-      { src: '/gallery/Désembouage/Désembouage1.jpg' },
-      { src: '/gallery/Désembouage/Désembouage2.jpg' },
-      { src: '/gallery/Désembouage/Désembouage3.jpg' },
-      { src: '/gallery/Désembouage/Désembouage4.jpg' },
+      { src: '/gallery/Desembouage/Desembouage1.jpg' },
+      { src: '/gallery/Desembouage/Desembouage2.jpg' },
+      { src: '/gallery/Desembouage/Desembouage3.jpg' },
+      { src: '/gallery/Desembouage/Desembouage4.jpg' },
     ],
   },
   {
-    key: 'Récréation',
-    label: "Réaménagement du réseau des eaux usées d’un bar",
+    key: 'recreation',
+    label: 'Reamenagement reseau des eaux usees',
     items: [
-      { src: '/gallery/Récréation/Récréation1.jpg' },
-      { src: '/gallery/Récréation/Récréation2.jpg' },
-      { src: '/gallery/Récréation/Récréation3.jpg' },
-      { src: '/gallery/Récréation/Récréation4.jpg' },
-      { src: '/gallery/Récréation/Récréation5.jpg' },
-      { src: '/gallery/Récréation/Récréation6.jpg' },
-      { src: '/gallery/Récréation/Récréation7.jpg' },
-      { src: '/gallery/Récréation/Récréation8.jpg' },
+      { src: '/gallery/Recreation/Recreation1.jpg' },
+      { src: '/gallery/Recreation/Recreation2.jpg' },
+      { src: '/gallery/Recreation/Recreation3.jpg' },
+      { src: '/gallery/Recreation/Recreation4.jpg' },
+      { src: '/gallery/Recreation/Recreation5.jpg' },
+      { src: '/gallery/Recreation/Recreation6.jpg' },
+      { src: '/gallery/Recreation/Recreation7.jpg' },
+      { src: '/gallery/Recreation/Recreation8.jpg' },
     ],
   },
   {
-    key: 'Remplacement',
-    label: "Remplacement d’une chaudière gaz à cheminée",
+    key: 'remplacement',
+    label: 'Remplacement chaudiere',
     items: [
       { src: '/gallery/Remplacement/Remplacement1.jpg' },
       { src: '/gallery/Remplacement/Remplacement2.jpg' },
@@ -73,7 +85,7 @@ const CATEGORIES: Category[] = [
   },
   {
     key: 'cuisine',
-    label: 'Aménagement d’une cuisine',
+    label: 'Amenagement cuisine',
     items: [
       { src: '/gallery/cuisine/Cuisine1.png' },
       { src: '/gallery/cuisine/Cuisine2.png' },
@@ -93,7 +105,7 @@ const CATEGORIES: Category[] = [
   },
   {
     key: 'plancher-chauffant',
-    label: 'Installation d’un plancher chauffant',
+    label: 'Installation de plancher chauffant',
     items: [
       { src: '/gallery/plancher-chauffant/plancher1.png' },
       { src: '/gallery/plancher-chauffant/plancher2.png' },
@@ -102,23 +114,21 @@ const CATEGORIES: Category[] = [
   },
   {
     key: 'chaudiere',
-    label: 'Remplacement d’une chaudière',
+    label: 'Chaudiere',
     items: [
-      { src: '/gallery/chaudiere/chaudière1.png' },
-      { src: '/gallery/chaudiere/chaudière2.png' },
-      { src: '/gallery/chaudiere/chaudière3.png' },
-  
+      { src: '/gallery/chaudiere/chaudiere1.png' },
+      { src: '/gallery/chaudiere/chaudiere2.png' },
+      { src: '/gallery/chaudiere/chaudiere3.png' },
     ],
   },
   {
-    key: 'Réparation',
-    label: 'Réparation d’une fuite dans le sol',
+    key: 'reparation',
+    label: 'Reparation fuite',
     items: [
-      { src: '/gallery/Réparation/Réparation1.jpg' },
-      { src: '/gallery/Réparation/Réparation2.jpg' },
-      { src: '/gallery/Réparation/Réparation3.jpg' },
-      { src: '/gallery/Réparation/Réparation4.jpg' },
-  
+      { src: '/gallery/Reparation/Reparation1.jpg' },
+      { src: '/gallery/Reparation/Reparation2.jpg' },
+      { src: '/gallery/Reparation/Reparation3.jpg' },
+      { src: '/gallery/Reparation/Reparation4.jpg' },
     ],
   },
 ];
@@ -126,10 +136,52 @@ const CATEGORIES: Category[] = [
 export default function GallerySection() {
   const [active, setActive] = useState<CategoryKey>('salle-de-bain');
   const [lightbox, setLightbox] = useState<{ src: string } | null>(null);
+  const [categories, setCategories] = useState<Category[]>(CATEGORIES);
+
+  useEffect(() => {
+    const baseUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
+    if (!baseUrl) return;
+
+    const url = `${baseUrl.replace(/\/$/, '')}/api/gallery-items?populate=image&filters[isActive][$eq]=true&sort=position:asc`;
+
+    fetch(url)
+      .then((res) => res.json())
+      .then((json) => {
+        const data = Array.isArray(json?.data) ? json.data : [];
+        if (!data.length) return;
+
+        const grouped: Record<string, { src: string }[]> = {};
+        for (const item of data) {
+          const attrs = item.attributes || {};
+          const categoryKey = attrs.category as string | undefined;
+          const imageUrl = attrs?.image?.data?.attributes?.url as string | undefined;
+          if (!categoryKey || !imageUrl) continue;
+
+          if (!grouped[categoryKey]) grouped[categoryKey] = [];
+          grouped[categoryKey].push({
+            src: imageUrl.startsWith('http') ? imageUrl : `${baseUrl}${imageUrl}`,
+          });
+        }
+
+        const nextCategories: Category[] = Object.entries(grouped).map(([key, items]) => ({
+          key: key as CategoryKey,
+          label: CATEGORY_LABELS[key] || key,
+          items,
+        }));
+
+        if (nextCategories.length) {
+          setCategories(nextCategories);
+          if (!nextCategories.find((c) => c.key === active)) {
+            setActive(nextCategories[0].key);
+          }
+        }
+      })
+      .catch(() => null);
+  }, []);
 
   const category = useMemo(
-    () => CATEGORIES.find((c) => c.key === active) ?? CATEGORIES[0],
-    [active],
+    () => categories.find((c) => c.key === active) ?? categories[0],
+    [active, categories],
   );
 
   return (
@@ -139,9 +191,8 @@ export default function GallerySection() {
           <h2 className="text-2xl md:text-3xl font-bold text-slate-50">Galerie</h2>
         </div>
 
-        {/* Tabs */}
         <div className="flex flex-wrap gap-2">
-          {CATEGORIES.map((c) => {
+          {categories.map((c) => {
             const isActive = c.key === active;
             return (
               <button
@@ -161,7 +212,6 @@ export default function GallerySection() {
           })}
         </div>
 
-        {/* Grid */}
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {category.items.map((img) => (
             <button
@@ -172,7 +222,7 @@ export default function GallerySection() {
               <div className="relative aspect-[4/3] w-full">
                 <Image
                   src={img.src}
-                  alt="Réalisation ZA Plomberie"
+                  alt="Realisation ZA Plomberie"
                   fill
                   className="object-cover transition duration-300 group-hover:scale-[1.03]"
                   sizes="(max-width: 1024px) 100vw, 33vw"
@@ -189,7 +239,6 @@ export default function GallerySection() {
         </div>
       </div>
 
-      {/* Lightbox */}
       {lightbox && (
         <div
           className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4"
@@ -202,7 +251,7 @@ export default function GallerySection() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-slate-800 px-4 py-3">
-              <p className="text-sm font-semibold text-slate-50">Aperçu</p>
+              <p className="text-sm font-semibold text-slate-50">Apercu</p>
               <button
                 onClick={() => setLightbox(null)}
                 className="rounded-full border border-slate-700 px-3 py-1 text-xs font-medium text-slate-200 hover:text-sky-300"
@@ -214,7 +263,7 @@ export default function GallerySection() {
             <div className="relative aspect-[16/9] w-full">
               <Image
                 src={lightbox.src}
-                alt="Réalisation ZA Plomberie"
+                alt="Realisation ZA Plomberie"
                 fill
                 className="object-contain bg-black"
                 sizes="100vw"
